@@ -1,8 +1,8 @@
 import random
 from tkinter import *
 
-SIZE = 400
-GRID_LEN = 4
+SIZE = 800
+GRID_LEN = 8
 GRID_PADDING = 10
 
 BACKGROUND_COLOR_GAME = "#92877d"
@@ -50,11 +50,25 @@ def check_game_state():
 
 
 def reverse(mat):
-    pass
-
+    # Функция для реверсирования матрицы
+    # (зеркальная копия матрицы)
+    new = []
+    for i in range(len(mat)):
+        new.append([])
+        for x in range(len(mat[0])):
+            new[i].append(mat[i][len(mat[0])-x-1])
+            # В функции transpose меняете [i][len(mat[0])-x-1]
+            # на [x][i]
+    return new
 
 def transpose(mat):
-    pass
+    new = []
+    # ПЕРЕНОСИМ [0] ИЗ ВТОРОГО for в первый!
+    for i in range(len(mat[0])):
+        new.append([])
+        for x in range(len(mat)):
+            new[i].append(mat[x][i])
+    return new
 
 
 def cover_up(mat):
@@ -111,6 +125,7 @@ def move_down():
     matrix = transpose(reverse(matrix))
     return done
 
+
 def move_left():
     # ШАПИТО. Трогать осторожно
     global matrix
@@ -122,10 +137,12 @@ def move_left():
     return done
 
 
-
-
 def move_right():
-    pass
+    global matrix
+    matrix = reverse(matrix)
+    done = move_left()
+    matrix = reverse(matrix)
+    return done
 
 
 def init_grid():
@@ -175,8 +192,13 @@ def update_grid_cells():
 
 
 
-def key_pressed(event):
-    pass
+def key_down(event):
+    key = repr(event.char)
+    if key in mainframe.commands:
+        done = mainframe.commands[repr(event.char)]()
+        if done:
+            add_two()
+            update_grid_cells()
 
 
 init_grid()
@@ -189,7 +211,5 @@ mainframe.master.bind("<Key>", key_down)
 
 mainframe.commands = {KEY_UP: move_up, KEY_DOWN: move_down,
 KEY_LEFT: move_left, KEY_RIGHT: move_right}
-
-
 
 mainloop()

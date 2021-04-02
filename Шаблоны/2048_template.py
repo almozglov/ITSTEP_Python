@@ -87,12 +87,29 @@ def merge(mat):
 
 
 def move_up():
-    pass
+    # ТР-РЕВ-ЛЕВО-ТР
+    global matrix
+    matrix = transpose(matrix)
+    game, done = cover_up(matrix)
+    temp = merge(matrix)
+    matrix = temp[0]
+    done = done or temp[1]
+    matrix = cover_up(matrix)[0]
+    matrix = transpose(matrix)
+    return done
 
 
 def move_down():
-    pass
-
+    # ТР-ЛЕВО-РЕВ-ТР
+    global matrix
+    matrix = reverse(transpose(matrix))
+    matrix, done = cover_up(matrix)
+    temp = merge(matrix)
+    matrix = temp[0]
+    done = done or temp[1]
+    matrix = cover_up(matrix)[0]
+    matrix = transpose(reverse(matrix))
+    return done
 
 def move_left():
     # ШАПИТО. Трогать осторожно

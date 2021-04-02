@@ -46,9 +46,22 @@ def reverse(mat):
 def transpose(mat):
     pass
 
-
 def cover_up(mat):
-    pass
+    # Двигать все ячейки матрицы влево (но не
+    # сливает их)
+    new = []
+    for i in range(len(mat)):
+        new.append([0] * len(mat))
+    done = False
+    for i in range(len(mat)):
+        count = 0
+        for j in range(len(mat)):
+            if mat[i][j] != 0:
+                new[i][count] = mat[i][j]
+                if j != count:
+                    done = True
+            count += 1
+    return (new, done)
 
 
 def merge(mat):

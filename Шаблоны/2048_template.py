@@ -32,7 +32,17 @@ matrix = []
 
 
 def add_two():
-    pass
+    # Получаем координаты ячейки матрицы
+    # и добавляем туда двойку
+    a = random.randint(0, GRID_LEN-1)
+    b = random.randint(0, GRID_LEN-1)
+    # Проверяем, что ячейка матрицы пустая
+    while matrix[a][b] != 0:
+        # Выбираем новые координаты до тех пор,
+        # пока не найдём пустую ячейку
+        a = random.randint(0, GRID_LEN-1)
+        b = random.randint(0, GRID_LEN-1)
+    matrix[a][b] = 2
 
 
 def check_game_state():
@@ -45,6 +55,7 @@ def reverse(mat):
 
 def transpose(mat):
     pass
+
 
 def cover_up(mat):
     # Двигать все ячейки матрицы влево (но не
@@ -60,7 +71,7 @@ def cover_up(mat):
                 new[i][count] = mat[i][j]
                 if j != count:
                     done = True
-            count += 1
+                count += 1
     return (new, done)
 
 
@@ -68,8 +79,7 @@ def merge(mat):
     done = False
     for i in range(len(mat)):
         for j in range(len(mat)-1):
-            if mat[i][j] == mat[i][j+1] and
-                mat[i][j] != 0:
+            if mat[i][j] == mat[i][j+1] and mat[i][j] != 0:
                 mat[i][j] *= 2
                 mat[i][j+1] = 0
                 done = True
@@ -85,7 +95,16 @@ def move_down():
 
 
 def move_left():
-    pass
+    # ШАПИТО. Трогать осторожно
+    global matrix
+    matrix, done = cover_up(matrix)
+    temp = merge(matrix)
+    matrix = temp[0]
+    done = done or temp[1]
+    matrix = cover_up(matrix)[0]
+    return done
+
+
 
 
 def move_right():
@@ -93,15 +112,60 @@ def move_right():
 
 
 def init_grid():
-    pass
+    # Создаём окошко игры (указываем ему цвет и размеры)
+    background = Frame(
+        bg=BACKGROUND_COLOR_GAME,
+        width=SIZE,
+        height=SIZE
+    )
+    background.grid()
+    for i in range(GRID_LEN):
+        grid_row = []
+        for x in range(GRID_LEN):
+            cell = Frame(background,
+                         bg=BACKGROUND_COLOR_CELL_EMPTY,
+                         width=SIZE/GRID_LEN,
+                         height=SIZE/GRID_LEN)
+            cell.grid(row=i, column=x,
+                      padx=GRID_PADDING, pady=GRID_PADDING)
+            cell_text = Label(
+                master=cell, text='', justify=CENTER,
+                font=FONT, width=5,height=2)
+            cell_text.grid()
+            grid_row.append(cell_text)
+        grid_cells.append(grid_row)
 
 
 def init_matrix():
-    pass
-
+    for i in range(GRID_LEN):
+        matrix.append([0]*GRID_LEN)
+    # Добавляем две двойки в матрицу
+    add_two()
+    add_two()
 
 def update_grid_cells():
-    pass
+    for a in range(GRID_LEN):
+        for b in range(GRID_LEN):
+            if matrix[a][b] == 0:
+                grid_cells[a][b].config(
+                    text='',
+                    bg=BACKGROUND_COLOR_CELL_EMPTY)
+            else:
+                grid_cells[a][b].config(
+                    text=matrix[a][b],
+                    bg=BACKGROUND_COLOR_DICT[matrix[a][b]],
+                    fg=CELL_COLOR_DICT[matrix[a][b]])
+
+
 
 def key_pressed(event):
     pass
+
+
+init_grid()
+init_matrix()
+update_grid_cells()
+
+
+
+mainloop()

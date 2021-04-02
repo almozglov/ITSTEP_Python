@@ -65,7 +65,15 @@ def cover_up(mat):
 
 
 def merge(mat):
-    pass
+    done = False
+    for i in range(len(mat)):
+        for j in range(len(mat)-1):
+            if mat[i][j] == mat[i][j+1] and
+                mat[i][j] != 0:
+                mat[i][j] *= 2
+                mat[i][j+1] = 0
+                done = True
+    return (mat, done)
 
 
 def move_up():

@@ -166,6 +166,13 @@ init_grid()
 init_matrix()
 update_grid_cells()
 
+mainframe.master.title('MYSUPERDUPERPUPER2048')
+# БИНДИМ НАЖАТИЯ КНОПОК К ДЕЙСТВИЯМ
+mainframe.master.bind("<Key>", key_down)
+
+mainframe.commands = {KEY_UP: up, KEY_DOWN: down,
+KEY_LEFT: left, KEY_RIGHT: right}
+
 
 
 mainloop()
